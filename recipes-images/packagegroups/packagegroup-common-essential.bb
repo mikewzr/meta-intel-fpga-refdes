@@ -8,8 +8,6 @@ inherit packagegroup
 PACKAGES = "packagegroup-common-essential"
 
 RDEPENDS:packagegroup-common-essential = "\
-	socfpga-intel-rsu-lib \
-	socfpga-intel-rsu-client \
 	socfpga-gsrd-apps \
 	socfpga-gsrd-initscripts \
 	socfpga-gsrd-pio-interrupt \
@@ -21,3 +19,6 @@ RDEPENDS:packagegroup-common-essential = "\
 	dosfstools \
 	init-ifupdown \
 	"
+
+RDEPENDS:packagegroup-common-essential:append= "\
+	${@bb.utils.contains('MACHINE', "agilex5", "socfpga-intel-unilibrsu-lib socfpga-intel-unilibrsu-client", "socfpga-intel-rsu-client socfpga-intel-rsu-lib",	d)}"

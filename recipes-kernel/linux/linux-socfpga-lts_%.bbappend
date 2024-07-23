@@ -39,8 +39,8 @@ SRC_URI:append = " file://ubifs.scc \
                    file://0002-Revert-net-ethernet-altera-tse-Convert-to-mdio-regma.patch \
                    file://0003-Revert-net-mdio-Introduce-a-regmap-based-mdio-driver.patch \
                    file://0004-Revert-net-stmmac-make-the-pcs_lynx-cleanup-sequence.patch"
-SRC_URI:append:agilex7_dk_si_agf014ea = " file://sgmii.scc file://ilc.scc"
-SRC_URI:append:agilex7_dk_si_agf014eb = " file://sgmii.scc file://ilc.scc"
+SRC_URI:append:agilex7_dk_si_agf014ea = " file://sgmii.scc file://ilc.scc file://blk_dev_ram.scc"
+SRC_URI:append:agilex7_dk_si_agf014eb = " file://sgmii.scc file://ilc.scc file://blk_dev_ram.scc"
 SRC_URI:append:agilex5 = " file://initrd.scc \
                            file://xdp.scc \
 						   file://tsn.scc \

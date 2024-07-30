@@ -67,10 +67,6 @@
 					gpios = <&led_pio 2 1>;
 			}; //end fpga2 (led_fpga2)
 
-			led_fpga3: fpga3 {
-					label = "fpga_led3";
-					gpios = <&led_pio 3 1>;
-			}; //end fpga3 (led_fpga3)
 		};
 
 	};

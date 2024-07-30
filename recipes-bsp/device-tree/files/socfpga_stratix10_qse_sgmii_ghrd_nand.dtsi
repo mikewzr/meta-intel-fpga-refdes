@@ -63,11 +63,6 @@
 					label = "fpga_led2";
 					gpios = <&led_pio 2 0>;
 			}; //end fpga2 (led_fpga2)
-
-			led_fpga3: fpga3 {
-					label = "fpga_led3";
-					gpios = <&led_pio 3 0>;
-			}; //end fpga3 (led_fpga3)
 		};
 
 		clocks {

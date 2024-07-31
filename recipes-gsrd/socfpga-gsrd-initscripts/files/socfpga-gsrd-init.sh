@@ -29,6 +29,9 @@ elif [ "`cat /etc/hostname`" == "stratix10" ]; then
 
 elif [[ "`cat /etc/hostname`" =~ "agilex7" ]]; then
 	/www/pages/cgi-bin/scroll_server &
+
+elif [[ "`cat /etc/hostname`" =~ "agilex5" ]]; then
+	/www/pages/cgi-bin/scroll_server &
 else
 	echo "machine not found"
 

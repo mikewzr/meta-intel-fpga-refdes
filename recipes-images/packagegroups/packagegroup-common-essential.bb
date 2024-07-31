@@ -21,4 +21,4 @@ RDEPENDS:packagegroup-common-essential = "\
 	"
 
 RDEPENDS:packagegroup-common-essential:append= "\
-	${@bb.utils.contains('MACHINE', "agilex5", "socfpga-intel-unilibrsu-lib socfpga-intel-unilibrsu-client", "socfpga-intel-rsu-client socfpga-intel-rsu-lib",	d)}"
+	${@'socfpga-intel-unilibrsu-lib socfpga-intel-unilibrsu-client' if d.getVar('MACHINE', True).startswith('agilex5') else 'socfpga-intel-rsu-client socfpga-intel-rsu-lib'}"

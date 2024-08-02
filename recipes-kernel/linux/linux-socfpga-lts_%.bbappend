@@ -131,6 +131,7 @@ do_deploy:append() {
 				# core.rbf
 				cp ${DEPLOY_DIR_IMAGE}/${MACHINE}_${IMAGE_TYPE}_ghrd/aic0.core.rbf ${B}
 				cp ${DEPLOY_DIR_IMAGE}/${MACHINE}_${IMAGE_TYPE}_ghrd/debug2.core.rbf ${B}
+				cp ${DEPLOY_DIR_IMAGE}/${MACHINE}_${IMAGE_TYPE}_ghrd/tsnconfig2.core.rbf ${B}
 			fi
 		fi
 	elif [[ "${MACHINE}" == *"stratix10"* ]]; then

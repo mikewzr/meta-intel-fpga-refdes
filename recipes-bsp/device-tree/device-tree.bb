@@ -177,11 +177,19 @@ do_configure:append() {
 			# Vanilla DTB Generation
 			cp ${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/intel/socfpga_agilex5_socdk_b0.dts ${WORKDIR}/socfpga_agilex5_vanilla.dts
 			cp ${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/intel/socfpga_agilex5.dtsi ${WORKDIR}/socfpga_agilex5.dtsi
+			cp ${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/intel/socfpga_agilex5_socdk_nand_b0.dts ${WORKDIR}/socfpga_agilex5_socdk_nand_vanilla.dts
+			cp ${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/intel/socfpga_agilex5_socdk_emmc.dts ${WORKDIR}/socfpga_agilex5_socdk_emmc_vanilla.dts
 
 			# GSRD DTB Generation
 			# MMC, QSPI
 			cp ${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/intel/socfpga_agilex5_socdk_b0.dts ${WORKDIR}/socfpga_agilex5_socdk.dts
 			sed -i '/\#include \"socfpga_agilex5.dtsi\"/a \#include \"socfpga_agilex5_ghrd.dtsi\"' ${WORKDIR}/socfpga_agilex5_socdk.dts
+			# EMMC
+			cp ${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/intel/socfpga_agilex5_socdk_emmc.dts ${WORKDIR}/socfpga_agilex5_socdk_emmc.dts
+			sed -i '/\#include \"socfpga_agilex5.dtsi\"/a \#include \"socfpga_agilex5_ghrd.dtsi\"' ${WORKDIR}/socfpga_agilex5_socdk_emmc.dts
+			# NAND
+			cp ${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/intel/socfpga_agilex5_socdk_nand_b0.dts ${WORKDIR}/socfpga_agilex5_socdk_nand.dts
+			sed -i '/\#include \"socfpga_agilex5.dtsi\"/a \#include \"socfpga_agilex5_ghrd.dtsi\"' ${WORKDIR}/socfpga_agilex5_socdk_nand.dts
 		else
 			# Vanilla DTB Generation
 			cp ${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/intel/socfpga_agilex5_socdk.dts ${WORKDIR}/socfpga_agilex5_vanilla.dts

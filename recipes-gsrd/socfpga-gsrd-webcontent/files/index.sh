@@ -243,7 +243,13 @@ if [ "$MACHINE" != "agilex5" ]; then
 			fi
 		fi
 
-		for LED_NUMBER in 0 1 2 3
+		if [ "$MACHINE" == "arria10" ] || ["$MACHINE" == "cyclone5" ]; then
+			LED_INDICES=(0 1 2 3)
+		else
+			LED_INDICES=(0 1 2)
+		fi
+
+		for LED_NUMBER in "${LED_INDICES[@]}"
 		do
 			if [ "$KEY" = "led_"$LED_NUMBER ]; then
 				if [ "$VALUE" = "BLINK" ]; then
@@ -271,8 +277,10 @@ if [ "$MACHINE" != "agilex5" ]; then
 		if [ "$KEY" = "led_2_freq" ]; then
 			LED_FREQ=$VALUE
 		fi
-		if [ "$KEY" = "led_3_freq" ]; then
-			LED_FREQ=$VALUE
+		if [ "$MACHINE" == "arria10" ] || ["$MACHINE" == "cyclone5" ]; then
+			if [ "$KEY" = "led_3_freq" ]; then
+				LED_FREQ=$VALUE
+			fi
 		fi
 		if [ "$KEY" = "scroll_freq" ]; then
 			SCROLL_FREQ=$VALUE
@@ -304,13 +312,17 @@ if [ "$MACHINE" != "agilex5" ]; then
 	LED0_STATUS=1
 	LED1_STATUS=0
 	LED2_STATUS=1
-	LED3_STATUS=0
+	if [ "$MACHINE" == "arria10" ] || ["$MACHINE" == "cyclone5" ]; then 
+		LED3_STATUS=0
+	fi
 	SCROLL_START=0
 
 	LED0_BLINKING=`cat /sys/class/leds/fpga_led0/trigger | cut -d "[" -f2 | cut -d "]" -f1`
 	LED1_BLINKING=`cat /sys/class/leds/fpga_led1/trigger | cut -d "[" -f2 | cut -d "]" -f1`
 	LED2_BLINKING=`cat /sys/class/leds/fpga_led2/trigger | cut -d "[" -f2 | cut -d "]" -f1`
-	LED3_BLINKING=`cat /sys/class/leds/fpga_led3/trigger | cut -d "[" -f2 | cut -d "]" -f1`
+	if [ "$MACHINE" == "arria10" ] || ["$MACHINE" == "cyclone5" ]; then
+		LED3_BLINKING=`cat /sys/class/leds/fpga_led3/trigger | cut -d "[" -f2 | cut -d "]" -f1`
+	fi
 
 	if [ "$LED0_BLINKING" = "timer" ]; then
 	LED0_STATUS=-1
@@ -330,10 +342,12 @@ if [ "$MACHINE" != "agilex5" ]; then
 	LED2_STATUS=`cat /sys/class/leds/fpga_led2/brightness`
 	fi
 
-	if [ "$LED3_BLINKING" = "timer" ]; then
-	LED3_STATUS=-1
-	else
-	LED3_STATUS=`cat /sys/class/leds/fpga_led3/brightness`
+	if [ "$MACHINE" == "arria10" ] || ["$MACHINE" == "cyclone5" ]; then
+		if [ "$LED3_BLINKING" = "timer" ]; then
+		LED3_STATUS=-1
+		else
+		LED3_STATUS=`cat /sys/class/leds/fpga_led3/brightness`
+		fi
 	fi
 
 	SCROLL_START=`./scroll_client 0`
@@ -346,7 +360,11 @@ if [ "$MACHINE" != "agilex5" ]; then
 	echo -e "<p>You can observe the LED that are connected to the FPGA on the board from the picture below.</p>"
 
 	echo -e "<table style=\"margin-top:10px; margin-left:0px; font-family: Arial; font-size: 10pt\">"
-	echo -e "<tr><td></td><td align=center width=19 height=10>0</td> <td align=center width=19 height=10>1</td> <td align=center width=19 height=10>2</td> <td align=center width=19 height=10>3</td></tr>"
+	if [ "$MACHINE" == "arria10" ] || ["$MACHINE" == "cyclone5" ]; then
+		echo -e "<tr><td></td><td align=center width=19 height=10>0</td> <td align=center width=19 height=10>1</td> <td align=center width=19 height=10>2</td> <td align=center width=19 height=10>3</td></tr>"
+	else
+		echo -e "<tr><td></td><td align=center width=19 height=10>0</td> <td align=center width=19 height=10>1</td> <td align=center width=19 height=10>2</td></tr>"
+	fi
 	echo -e "<tr>"
 
 	if [ "$SCROLL_START" == "1" ]; then
@@ -377,12 +395,14 @@ if [ "$MACHINE" != "agilex5" ]; then
 		echo -e "<td align=center width=19 height=46> <img src=\"../blinkled.gif\"> </td>"
 	fi
 
-	if [ "$LED3_STATUS" == "0" ]; then
-		echo -e "<td align=center width=19 height=46> <img src=\"../offled.jpg\"> </td>"
-	elif [ "$LED3_STATUS" == "1" ]; then
-		echo -e "<td align=center width=19 height=46> <img src=\"../onled.jpg\"> </td>"
-	else
-		echo -e "<td align=center width=19 height=46> <img src=\"../blinkled.gif\"> </td>"
+	if [ "$MACHINE" == "arria10" ] || ["$MACHINE" == "cyclone5" ]; then
+		if [ "$LED3_STATUS" == "0" ]; then
+			echo -e "<td align=center width=19 height=46> <img src=\"../offled.jpg\"> </td>"
+		elif [ "$LED3_STATUS" == "1" ]; then
+			echo -e "<td align=center width=19 height=46> <img src=\"../onled.jpg\"> </td>"
+		else
+			echo -e "<td align=center width=19 height=46> <img src=\"../blinkled.gif\"> </td>"
+		fi
 	fi
 
 	fi
@@ -470,24 +490,26 @@ if [ "$MACHINE" != "agilex5" ]; then
 		echo -e "</P>"
 	echo -e "</FORM>"
 
-	echo -e "<FORM action=\"/cgi-bin/index.sh#interactive\" method=\"post\">"
-		echo -e "<P>"
-		echo -e "<strong><font size=\"2\"> LED 3: </font></strong> "	
-		if [ "$SCROLL_START" == 0 ]; then
-		echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"ON\" >"
-		echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"OFF\" >"	
-		echo -e "&nbsp &nbsp &nbsp &nbsp &nbsp"
-		echo -e "<INPUT type=\"text\" id=\"led3_id\" class=\"box\" size=\"22\" name=\"led_3_freq\" placeholder=\"Type LED Toggling Delay (ms)\"  onChange=\"valuevalidation(this.value, 4);\">  "
-		echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"BLINK\" >"
-		else
-		echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"ON\" disabled>"
-		echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"OFF\" disabled>"	
-		echo -e "&nbsp &nbsp &nbsp &nbsp &nbsp"
-		echo -e "<INPUT type=\"text\" id=\"led3_id\" class=\"box\" size=\"22\" name=\"led_3_freq\" placeholder=\"Type LED Toggling Delay (ms)\" disabled>  "
-		echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"BLINK\" disabled>"
-		fi
-		echo -e "</P>"	
-	echo -e "</FORM>"
+	if [ "$MACHINE" == "arria10" ] || ["$MACHINE" == "cyclone5" ]; then
+		echo -e "<FORM action=\"/cgi-bin/index.sh#interactive\" method=\"post\">"
+			echo -e "<P>"
+			echo -e "<strong><font size=\"2\"> LED 3: </font></strong> "	
+			if [ "$SCROLL_START" == 0 ]; then
+			echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"ON\" >"
+			echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"OFF\" >"	
+			echo -e "&nbsp &nbsp &nbsp &nbsp &nbsp"
+			echo -e "<INPUT type=\"text\" id=\"led3_id\" class=\"box\" size=\"22\" name=\"led_3_freq\" placeholder=\"Type LED Toggling Delay (ms)\"  onChange=\"valuevalidation(this.value, 4);\">  "
+			echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"BLINK\" >"
+			else
+			echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"ON\" disabled>"
+			echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"OFF\" disabled>"	
+			echo -e "&nbsp &nbsp &nbsp &nbsp &nbsp"
+			echo -e "<INPUT type=\"text\" id=\"led3_id\" class=\"box\" size=\"22\" name=\"led_3_freq\" placeholder=\"Type LED Toggling Delay (ms)\" disabled>  "
+			echo -e "<INPUT type=\"submit\" class=\"box\" name=\"led_3\" value=\"BLINK\" disabled>"
+			fi
+			echo -e "</P>"	
+		echo -e "</FORM>"
+	fi
 
 	# FPGA in user mode detection complete
 

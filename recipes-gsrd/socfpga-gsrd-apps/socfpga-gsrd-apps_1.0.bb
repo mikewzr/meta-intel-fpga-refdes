@@ -21,7 +21,7 @@ SRC_URI = " \
 		file://README_agilex5 \
 		"
 
-SRCREV = "${AUTOREV}"
+SRCREV = "57b44fdf88bb344491118db066142938344ee3c3"
 
 FILES:${PN} = "/www/pages/* \
 	       /home/root/intelFPGA/* \
